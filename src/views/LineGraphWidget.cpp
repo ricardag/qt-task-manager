@@ -78,6 +78,12 @@ int LineGraphWidget::addSeries(const QString& name, const QColor& color, double 
     if (yAxisMax >= 0.0) {
         fixedYMax_ = yAxisMax;
         axisY_->setRange(0, fixedYMax_);
+    } else {
+        // Auto-scaled graphs (bytes/sec) would otherwise show raw
+        // unformatted numbers like "2044723.2" on the axis; the nav list,
+        // header, and stats row already show the properly formatted
+        // value, so just keep the gridlines as a scale reference.
+        axisY_->setLabelsVisible(false);
     }
 
     dataSeries_.push_back(line);
@@ -97,7 +103,16 @@ void LineGraphWidget::addSample(int seriesIndex, double value) {
     }
 
     if (fixedYMax_ < 0.0) {
-        observedYMax_ = std::max(observedYMax_, value * 1.2);
+        // Recompute from the points still in the visible window (rather
+        // than an ever-growing max) so a one-time spike doesn't flatten
+        // the rest of the graph forever once it scrolls out of view.
+        double windowMax = 0.0;
+        for (const QLineSeries* s : dataSeries_) {
+            for (const QPointF& point : s->points()) {
+                windowMax = std::max(windowMax, point.y());
+            }
+        }
+        observedYMax_ = std::max(windowMax * 1.2, 1.0);
         axisY_->setRange(0, observedYMax_);
     }
 

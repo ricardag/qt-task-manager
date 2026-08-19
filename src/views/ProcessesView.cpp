@@ -23,7 +23,7 @@ ProcessesView::ProcessesView(SystemMonitor* monitor, QWidget* parent) : QWidget(
     table->sortByColumn(ProcessTableModel::ColumnCpu, Qt::DescendingOrder);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->horizontalHeader()->setStretchLastSection(true);
+    table->setFocusPolicy(Qt::NoFocus);
     table->horizontalHeader()->setSectionResizeMode(ProcessTableModel::ColumnName, QHeaderView::Stretch);
     table->verticalHeader()->setVisible(false);
     table->verticalHeader()->setDefaultSectionSize(30);

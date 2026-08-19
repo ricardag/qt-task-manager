@@ -22,8 +22,14 @@ ServicesView::ServicesView(QWidget* parent) : QWidget(parent) {
     table->setSortingEnabled(true);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->horizontalHeader()->setStretchLastSection(true);
+    table->setFocusPolicy(Qt::NoFocus);
+    table->horizontalHeader()->setSectionResizeMode(ServiceTableModel::ColumnName, QHeaderView::Interactive);
+    table->setColumnWidth(ServiceTableModel::ColumnName, 220);
+    table->horizontalHeader()->setSectionResizeMode(ServiceTableModel::ColumnDescription, QHeaderView::Stretch);
+    table->horizontalHeader()->setSectionResizeMode(ServiceTableModel::ColumnStatus, QHeaderView::ResizeToContents);
     table->verticalHeader()->setVisible(false);
+    table->verticalHeader()->setDefaultSectionSize(30);
+    table->sortByColumn(ServiceTableModel::ColumnName, Qt::AscendingOrder);
 
     auto* refreshButton = new QPushButton(tr("Atualizar"), this);
     connect(refreshButton, &QPushButton::clicked, this, &ServicesView::reload);

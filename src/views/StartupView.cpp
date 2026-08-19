@@ -16,8 +16,13 @@ StartupView::StartupView(QWidget* parent) : QWidget(parent) {
     table->setModel(model_);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->horizontalHeader()->setStretchLastSection(true);
+    table->setFocusPolicy(Qt::NoFocus);
+    table->horizontalHeader()->setSectionResizeMode(StartupTableModel::ColumnName, QHeaderView::Interactive);
+    table->setColumnWidth(StartupTableModel::ColumnName, 200);
+    table->horizontalHeader()->setSectionResizeMode(StartupTableModel::ColumnCommand, QHeaderView::Stretch);
+    table->horizontalHeader()->setSectionResizeMode(StartupTableModel::ColumnStatus, QHeaderView::ResizeToContents);
     table->verticalHeader()->setVisible(false);
+    table->verticalHeader()->setDefaultSectionSize(30);
 
     auto* refreshButton = new QPushButton(tr("Atualizar"), this);
     connect(refreshButton, &QPushButton::clicked, this, &StartupView::reload);

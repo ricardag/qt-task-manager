@@ -23,7 +23,8 @@ DetailsView::DetailsView(SystemMonitor* monitor, QWidget* parent) : QWidget(pare
     table->sortByColumn(ProcessTableModel::ColumnPid, Qt::AscendingOrder);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->horizontalHeader()->setStretchLastSection(true);
+    table->setFocusPolicy(Qt::NoFocus);
+    table->horizontalHeader()->setSectionResizeMode(ProcessTableModel::ColumnName, QHeaderView::Stretch);
     table->verticalHeader()->setVisible(false);
     table->verticalHeader()->setDefaultSectionSize(30);
 

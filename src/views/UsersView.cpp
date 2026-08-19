@@ -18,8 +18,13 @@ UsersView::UsersView(QWidget* parent) : QWidget(parent) {
     table->setModel(model_);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->horizontalHeader()->setStretchLastSection(true);
+    table->setFocusPolicy(Qt::NoFocus);
+    table->horizontalHeader()->setSectionResizeMode(UserTableModel::ColumnUser, QHeaderView::Stretch);
+    table->horizontalHeader()->setSectionResizeMode(UserTableModel::ColumnTerminal, QHeaderView::ResizeToContents);
+    table->horizontalHeader()->setSectionResizeMode(UserTableModel::ColumnHost, QHeaderView::ResizeToContents);
+    table->horizontalHeader()->setSectionResizeMode(UserTableModel::ColumnLoginTime, QHeaderView::ResizeToContents);
     table->verticalHeader()->setVisible(false);
+    table->verticalHeader()->setDefaultSectionSize(30);
 
     auto* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
