@@ -1,5 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>style.qss</file>
+        <file>icons/processes.svg</file>
+        <file>icons/performance.svg</file>
+        <file>icons/app_history.svg</file>
+        <file>icons/startup.svg</file>
+        <file>icons/users.svg</file>
+        <file>icons/details.svg</file>
+        <file>icons/services.svg</file>
     </qresource>
 </RCC>

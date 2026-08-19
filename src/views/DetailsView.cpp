@@ -25,6 +25,7 @@ DetailsView::DetailsView(SystemMonitor* monitor, QWidget* parent) : QWidget(pare
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->horizontalHeader()->setStretchLastSection(true);
     table->verticalHeader()->setVisible(false);
+    table->verticalHeader()->setDefaultSectionSize(30);
 
     auto* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);

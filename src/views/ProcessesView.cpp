@@ -26,6 +26,7 @@ ProcessesView::ProcessesView(SystemMonitor* monitor, QWidget* parent) : QWidget(
     table->horizontalHeader()->setStretchLastSection(true);
     table->horizontalHeader()->setSectionResizeMode(ProcessTableModel::ColumnName, QHeaderView::Stretch);
     table->verticalHeader()->setVisible(false);
+    table->verticalHeader()->setDefaultSectionSize(30);
 
     auto* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
