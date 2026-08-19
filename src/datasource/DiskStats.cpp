@@ -31,7 +31,8 @@ std::vector<DiskDeviceSample> DiskStats::sampleDevices() const {
     for (const std::string& line : splitLines(*content)) {
         const std::vector<std::string> fields = splitWhitespace(line);
         // major minor name reads_completed reads_merged sectors_read time_reading
-        // writes_completed writes_merged sectors_written ...
+        // writes_completed writes_merged sectors_written time_writing
+        // ios_in_progress time_ios weighted_time_ios ...
         if (fields.size() < 10) continue;
 
         DiskDeviceSample sample;
@@ -40,6 +41,7 @@ std::vector<DiskDeviceSample> DiskStats::sampleDevices() const {
         sample.sectorsRead = toU64(fields[5]);
         sample.writesCompleted = toU64(fields[7]);
         sample.sectorsWritten = toU64(fields[9]);
+        if (fields.size() > 12) sample.ioTimeMs = toU64(fields[12]);
         result.push_back(std::move(sample));
     }
 

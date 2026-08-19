@@ -3,6 +3,9 @@
 #include <QAreaSeries>
 #include <QChart>
 #include <QChartView>
+#include <QFrame>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QLineSeries>
 #include <QValueAxis>
 #include <QVBoxLayout>
@@ -12,23 +15,33 @@ QT_USE_NAMESPACE
 
 namespace taskmanager {
 
-LineGraphWidget::LineGraphWidget(QWidget* parent) : QWidget(parent) {
+LineGraphWidget::LineGraphWidget(QWidget* parent, bool compact) : QWidget(parent), compact_(compact) {
     chart_ = new QChart();
     chart_->legend()->hide();
     chart_->setBackgroundVisible(false);
     chart_->setPlotAreaBackgroundVisible(false);
-    chart_->setMargins(QMargins(0, 6, 6, 0));
+    chart_->setMargins(compact_ ? QMargins(0, 0, 0, 0) : QMargins(2, 8, 8, 2));
 
     axisX_ = new QValueAxis(chart_);
     axisX_->setLabelsVisible(false);
-    axisX_->setGridLineVisible(false);
     axisX_->setLineVisible(false);
     axisX_->setRange(0, kWindowSize);
+    if (compact_) {
+        axisX_->setGridLineVisible(false);
+    } else {
+        // Vertical gridlines at regular intervals, matching Task
+        // Manager's boxed-grid look instead of a bare line.
+        axisX_->setGridLineVisible(true);
+        axisX_->setGridLineColor(QColor(0, 0, 0, 20));
+        axisX_->setTickCount(7);
+    }
     chart_->addAxis(axisX_, Qt::AlignBottom);
 
     axisY_ = new QValueAxis(chart_);
     axisY_->setRange(0, 1);
     axisY_->setLineVisible(false);
+    axisY_->setLabelsVisible(!compact_);
+    axisY_->setGridLineVisible(!compact_);
     axisY_->setGridLineColor(QColor(0, 0, 0, 30));
     axisY_->setLabelsColor(QColor("#5f5f5f"));
     chart_->addAxis(axisY_, Qt::AlignRight);
@@ -40,15 +53,45 @@ LineGraphWidget::LineGraphWidget(QWidget* parent) : QWidget(parent) {
 
     auto* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(chartView_);
+    layout->setSpacing(4);
+
+    if (compact_) {
+        layout->addWidget(chartView_);
+        return;
+    }
+
+    auto* chartFrame = new QFrame(this);
+    chartFrame->setObjectName(QStringLiteral("lineGraphFrame"));
+    chartFrame->setStyleSheet(QStringLiteral("#lineGraphFrame { border: 1px solid #e1e1e1; background: white; }"));
+    auto* frameLayout = new QVBoxLayout(chartFrame);
+    frameLayout->setContentsMargins(1, 1, 1, 1);
+    frameLayout->addWidget(chartView_);
+    layout->addWidget(chartFrame, 1);
+
+    auto* captionRow = new QHBoxLayout();
+    captionLeft_ = new QLabel(this);
+    captionRight_ = new QLabel(this);
+    captionLeft_->setStyleSheet(QStringLiteral("color: #8a8886; font-size: 11px;"));
+    captionRight_->setStyleSheet(QStringLiteral("color: #8a8886; font-size: 11px;"));
+    captionRow->addWidget(captionLeft_);
+    captionRow->addStretch(1);
+    captionRow->addWidget(captionRight_);
+    layout->addLayout(captionRow);
 }
 
-int LineGraphWidget::addSeries(const QString& name, const QColor& color, double yAxisMax, bool areaFill) {
+void LineGraphWidget::setTimeAxisCaption(const QString& leftText, const QString& rightText) {
+    if (captionLeft_) captionLeft_->setText(leftText);
+    if (captionRight_) captionRight_->setText(rightText);
+}
+
+int LineGraphWidget::addSeries(const QString& name, const QColor& color, double yAxisMax, bool areaFill,
+                                Qt::PenStyle penStyle) {
     auto* line = new QLineSeries();
     line->setName(name);
 
     QPen pen(color);
-    pen.setWidthF(1.75);
+    pen.setWidthF(compact_ ? 1.25 : 1.75);
+    pen.setStyle(penStyle);
 
     QAbstractSeries* rendered = line;
     if (areaFill) {
@@ -78,7 +121,7 @@ int LineGraphWidget::addSeries(const QString& name, const QColor& color, double 
     if (yAxisMax >= 0.0) {
         fixedYMax_ = yAxisMax;
         axisY_->setRange(0, fixedYMax_);
-    } else {
+    } else if (!compact_) {
         // Auto-scaled graphs (bytes/sec) would otherwise show raw
         // unformatted numbers like "2044723.2" on the axis; the nav list,
         // header, and stats row already show the properly formatted

@@ -1,6 +1,7 @@
 #include "SystemMonitor.h"
 
 #include <QTimer>
+#include <algorithm>
 
 namespace taskmanager {
 
@@ -76,6 +77,8 @@ void SystemMonitor::tick() {
                 static_cast<double>(current.sectorsRead - prev.sectorsRead) * kSectorBytes / intervalSeconds_;
             rate.writeBytesPerSec =
                 static_cast<double>(current.sectorsWritten - prev.sectorsWritten) * kSectorBytes / intervalSeconds_;
+            const double ioTimeDeltaMs = static_cast<double>(current.ioTimeMs - prev.ioTimeMs);
+            rate.activePercent = std::clamp((ioTimeDeltaMs / (intervalSeconds_ * 1000.0)) * 100.0, 0.0, 100.0);
         }
         diskRates.push_back(rate);
     }

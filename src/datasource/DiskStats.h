@@ -15,6 +15,7 @@ struct DiskDeviceSample {
     std::uint64_t sectorsRead = 0;
     std::uint64_t writesCompleted = 0;
     std::uint64_t sectorsWritten = 0;
+    std::uint64_t ioTimeMs = 0; // cumulative milliseconds this device spent with I/O in flight
 };
 
 struct FilesystemUsage {

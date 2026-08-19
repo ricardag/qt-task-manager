@@ -36,6 +36,7 @@ struct DiskRate {
     std::string name;
     double readBytesPerSec = 0.0;
     double writeBytesPerSec = 0.0;
+    double activePercent = 0.0; // % of the interval this device had I/O in flight
 };
 
 // Central facade that owns the single polling QTimer and delegates each
