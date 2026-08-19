@@ -12,6 +12,10 @@
 #include "datasource/ProcessInfo.h"
 #include "datasource/ProcessReader.h"
 
+QT_BEGIN_NAMESPACE
+class QTimer;
+QT_END_NAMESPACE
+
 namespace taskmanager {
 
 // A process snapshot with CPU usage already resolved to a percentage of
@@ -66,7 +70,7 @@ private:
     datasource::GpuStats gpuStats_;
     datasource::ProcessReader processReader_;
 
-    class QTimer* timer_ = nullptr;
+    QTimer* timer_ = nullptr;
     double intervalSeconds_ = 1.0;
 
     std::vector<datasource::CpuCoreTicks> previousCpuTicks_;
