@@ -1,0 +1,41 @@
+/* Fluent-ish look for the Win11 Task Manager clone. */
+
+QMainWindow {
+    background: palette(base);
+}
+
+#navigationSidebar {
+    background: palette(alternate-base);
+    border: none;
+    outline: none;
+    padding: 8px 4px;
+}
+
+#navigationSidebar::item {
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin: 1px 4px;
+}
+
+#navigationSidebar::item:selected {
+    background: palette(highlight);
+    color: palette(highlighted-text);
+}
+
+#navigationSidebar::item:hover:!selected {
+    background: rgba(128, 128, 128, 40);
+}
+
+QTableView {
+    gridline-color: transparent;
+    alternate-background-color: rgba(128, 128, 128, 15);
+    selection-background-color: palette(highlight);
+}
+
+QHeaderView::section {
+    padding: 6px;
+    border: none;
+    border-bottom: 1px solid palette(mid);
+    background: palette(base);
+    font-weight: 600;
+}

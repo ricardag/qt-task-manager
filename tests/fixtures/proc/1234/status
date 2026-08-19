@@ -1,0 +1,6 @@
+Name:	weird (name) proc
+State:	S (sleeping)
+Uid:	1000	1000	1000	1000
+VmSize:	  123456 kB
+VmRSS:	    45678 kB
+Threads:	4
